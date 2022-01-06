@@ -1,0 +1,196 @@
+package com.hitachi.kioskdesk.controller;
+
+import com.hitachi.kioskdesk.domain.Product;
+import com.hitachi.kioskdesk.domain.User;
+import com.hitachi.kioskdesk.enums.Status;
+import com.hitachi.kioskdesk.helper.Message;
+import com.hitachi.kioskdesk.repository.ProductRepository;
+import com.hitachi.kioskdesk.repository.UserRepository;
+import com.hitachi.kioskdesk.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+/**
+ * Shiva Created on 04/01/22
+ */
+@Slf4j
+@Controller
+@RequestMapping("/admin/")
+public class AdminController {
+
+    @Autowired
+    ProductRepository productRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    private ProductService productService;
+
+    @RequestMapping(value = "/products", method = RequestMethod.GET)
+    public String listProducts(
+            Model model,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("products", productPage.getContent());
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "admin-products";
+    }
+
+
+    @RequestMapping("users")
+    public String users(Model model) {
+        model.addAttribute("title", "Kiosk - Users List");
+        model.addAttribute("users", userRepository.findAll());
+        return "admin-users";
+    }
+
+    @RequestMapping(value = "/product/complete", method = RequestMethod.GET)
+    public String completeProduct(@Param(value = "id") Long id, HttpSession session) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        try {
+            Product product = optionalProduct.get();
+            product.setStatus(Status.COMPLETED);
+            productRepository.save(product);
+            session.setAttribute("message", new Message("Product Status Updated for " + id, "alert-success"));
+            return "redirect:/admin/products";
+        } catch (NoSuchElementException ex) {
+            log.error("Product not found ", ex);
+            session.setAttribute("message", new Message("Product Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+    @RequestMapping(value = "/product/delete", method = RequestMethod.GET)
+    public String deleteProduct(@Param(value = "id") Long id, HttpSession session) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        try {
+            Product product = optionalProduct.get();
+            productRepository.delete(product);
+            session.setAttribute("message", new Message("Product deleted successfully with ID" + id, "alert-success"));
+            return "redirect:/admin/products";
+        } catch (NoSuchElementException ex) {
+            log.error("Product not found ", ex);
+            session.setAttribute("message", new Message("Product Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+    @RequestMapping(value = "/user/edit", method = RequestMethod.GET)
+    public String userEdit(@Param(value = "id") Long id, HttpSession session, Model model) {
+        Optional<User> optionalProduct = userRepository.findById(id);
+        try {
+            User user = optionalProduct.get();
+            model.addAttribute("u", user);
+            return "user-edit";
+        } catch (NoSuchElementException ex) {
+            log.error("User not found ", ex);
+            session.setAttribute("message", new Message("User Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+    @PostMapping("/updateUserDetails")
+    public String updateUserDetails(@Valid @ModelAttribute("u") User user, BindingResult result,
+                                    HttpSession session, Model model) {
+
+        try {
+            if (result.hasErrors()) {
+                log.error("Validation error while saving user {}", result);
+                model.addAttribute("u", user);
+                return "user-edit";
+            }
+            User savedUser = userRepository.findById(user.getId()).get();
+            savedUser.setRole(user.getRole());
+            savedUser.setEmail(user.getEmail());
+            if (user.getPassword() != null) {
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                savedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            userRepository.save(savedUser);
+            session.setAttribute("message", new Message("Successfully Updated User", "alert-success"));
+            return "redirect:/admin/users";
+        } catch (Exception ex) {
+            log.error("Error while updating user", ex);
+            session.setAttribute("message", new Message("Something went wrong!! " + ex.getMessage(), "alert-danger"));
+            return "redirect:/admin/users";
+        }
+    }
+
+    @RequestMapping(value = "/user/delete", method = RequestMethod.GET)
+    public String deleteUser(@Param(value = "id") Long id, HttpSession session) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        try {
+            User user = optionalUser.get();
+            userRepository.delete(user);
+            session.setAttribute("message", new Message("User deleted successfully with ID" + id, "alert-success"));
+            return "redirect:/admin/users";
+        } catch (NoSuchElementException ex) {
+            log.error("User not found ", ex);
+            session.setAttribute("message", new Message("User Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+    @RequestMapping("/addUser")
+    public String addUser(Model model) {
+        model.addAttribute("title", "Kiosk - Create User");
+        model.addAttribute("u", new User());
+        return "addUser";
+    }
+
+    @PostMapping("/saveNewUser")
+    public String saveNewUser(@Valid @ModelAttribute("u") User user, BindingResult result,
+                              HttpSession session, Model model) {
+
+        try {
+            if (result.hasErrors()) {
+                log.error("Validation error while saving user {}", result);
+                model.addAttribute("u", user);
+                return "addUser";
+            }
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            user.setEnabled(true);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+            session.setAttribute("message", new Message("Successfully Added User", "alert-success"));
+            return "redirect:/admin/users";
+        } catch (Exception ex) {
+            log.error("Error while saving user", ex);
+            session.setAttribute("message", new Message("Something went wrong!! " + ex.getMessage(), "alert-danger"));
+            return "addUser";
+        }
+    }
+
+
+}

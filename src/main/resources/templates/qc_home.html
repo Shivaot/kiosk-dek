@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="utf-8"/>
+
+
+</head>
+<body style="background-color: #f8f9fd;">
+
+<section>
+    <div class="container form-box">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="my-card mt-3">
+
+                    <div class="alert" th:classappend="${session.message.type}" th:if="${session.message}">
+                        <p id="form-message" th:text="${session.message.content}"></p>
+                        <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+                    </div>
+
+                    Scan Code
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+</body>
+</html>

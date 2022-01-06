@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" th:fragment="layout(content)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.4.7.0.css}"/>
+
+    <style>
+        .form-box {
+            padding: 3%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.5rem;
+            background: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .bar-code {
+            width: 200px
+        }
+
+    </style>
+
+    <title th:text="${title}">Base HTML</title>
+</head>
+<body>
+<div th:replace="navbar::header"></div>
+<!--<div th:insert="navbar::header"></div> --also works-- -->
+<div th:replace="${content}"></div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('li.active:not(#pag)').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+        if (window.location.href.indexOf("addProduct") === -1) {
+            setTimeout(function () {
+                $('.alert').alert('close');
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>

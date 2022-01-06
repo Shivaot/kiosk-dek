@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unauthorized Page</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.4.7.0.css}"/>
+</head>
+<body style="background-color: #f8f9fd;">
+
+<section>
+    <div class="container form-box">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="my-card mt-3">
+
+                    <h1 class="display-4">403 - You are not authorized to view this page!!</h1>
+
+
+                    <div class="alert" th:classappend="${session.message.type}" th:if="${session.message}">
+                        <p id="form-message" th:text="${session.message.content}"></p>
+                        <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+
+</body>
+
+</html>

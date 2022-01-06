@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="utf-8"/>
+
+
+</head>
+<body style="background-color: #f8f9fd;">
+
+<section>
+    <div class="container form-box">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="my-card mt-3">
+
+                    <div class="alert" th:classappend="${session.message.type}" th:if="${session.message}">
+                        <p id="form-message" th:text="${session.message.content}"></p>
+                        <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+                    </div>
+
+                    <h1 class="text-center">Enter Details</h1>
+                    <br/><br/>
+
+                    <form action="" id="update-form" method="post" th:action="@{/admin/saveNewUser}" th:object="${u}">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input class="form-control" id="email" name="email" required th:value="${u.email}"
+                                   type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input class="form-control" id="password" name="password" required type="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-control" id="role" required th:field="*{role}">
+                                <option value="Nothing Selected"></option>
+                                <option th:each="r : ${T(com.hitachi.kioskdesk.enums.Role).values()}"
+                                        th:text="${r.displayValue}"
+                                        th:value="${r}">Admin
+                                </option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary">Submit</button>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+</body>
+</html>
