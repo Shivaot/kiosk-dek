@@ -74,9 +74,42 @@ public class StickerService {
         stamper.close();
         reader.close();
         return output.toByteArray();
-
-
     }
 
 
+    public byte[] getRedStickerBytes(Product product) throws Exception {
+        byte[] barcodeBytes = generateCode128BarcodeImage(product.getId().toString());
+        log.info("Creating barcode with for QC with id {}", product.getId());
+        return generateRedSticker(barcodeBytes, product);
+    }
+
+    byte[] generateRedSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
+        ClassPathResource res = new ClassPathResource("red_sticker.pdf");
+        File file = res.getFile();
+        PdfReader reader = new PdfReader(Files.readAllBytes(Paths.get(file.getPath())));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PdfStamper stamper = new PdfStamper(reader, output);
+        AcroFields form = stamper.getAcroFields();
+
+        form.setField("product_date", product.getDate().toString());
+        form.setField("product_part_no", product.getPartNumber());
+        form.setField("product_modal", product.getModel().getDisplayValue());
+        form.setField("product_qty", product.getQuantity().toString());
+        form.setField("product_reason", product.getQc1Comments());
+        form.setField("product_notification_no", product.getNotificationNumber());
+        form.setField("product_vendor", product.getVendor());
+        form.setField("product_authorized_by", product.getAuthorizedBy());
+
+        PdfContentByte content = stamper.getOverContent(reader.getNumberOfPages());
+
+        com.itextpdf.text.Image image = Image.getInstance(barcodeBytes);
+
+        image.setAbsolutePosition(171, 515);
+        image.scaleAbsolute(140, 20);
+        content.addImage(image);
+        stamper.setFormFlattening(true);
+        stamper.close();
+        reader.close();
+        return output.toByteArray();
+    }
 }

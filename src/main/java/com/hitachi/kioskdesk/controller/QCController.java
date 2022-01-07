@@ -4,8 +4,14 @@ import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
 import com.hitachi.kioskdesk.repository.ProductRepository;
+import com.hitachi.kioskdesk.service.StickerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.sql.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -27,6 +34,8 @@ public class QCController {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    StickerService stickerService;
 
     @GetMapping("product/{id}")
     public String viewProduct(Model model, @PathVariable(value = "id") Long productId, HttpSession session) {
@@ -73,6 +82,19 @@ public class QCController {
         }
         model.addAttribute("title", "Kiosk - Product Saved");
         return "success";
+    }
+
+    @RequestMapping(value = "/product/print", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> getRedStickerFile(@Param(value = "id") Long id) throws Exception {
+        Product product = productRepository.findById(id).get();
+        byte[] stickerBytes = stickerService.getRedStickerBytes(product);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-disposition", "inline;filename=red_sticker.pdf");
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
     }
 
 }

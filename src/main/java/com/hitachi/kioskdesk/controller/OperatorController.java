@@ -80,11 +80,11 @@ public class OperatorController {
     }
 
     @RequestMapping(value = "/product/print", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getTermsConditions(@Param(value = "id") Long id) throws Exception {
+    public ResponseEntity<InputStreamResource> getWhiteStickerFile(@Param(value = "id") Long id) throws Exception {
         Product product = productRepository.findById(id).get();
         byte[] stickerBytes = stickerService.getWhiteStickerBytes(product, getBaseUrl());
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "inline;filename=white_sticker");
+        headers.add("content-disposition", "inline;filename=white_sticker.pdf");
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
         return ResponseEntity.ok()
                 .headers(headers)
