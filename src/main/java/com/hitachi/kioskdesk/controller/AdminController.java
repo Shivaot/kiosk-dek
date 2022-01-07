@@ -1,9 +1,11 @@
 package com.hitachi.kioskdesk.controller;
 
 import com.hitachi.kioskdesk.domain.Product;
+import com.hitachi.kioskdesk.domain.ProductModel;
 import com.hitachi.kioskdesk.domain.User;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
+import com.hitachi.kioskdesk.repository.ProductModelRepository;
 import com.hitachi.kioskdesk.repository.ProductRepository;
 import com.hitachi.kioskdesk.repository.UserRepository;
 import com.hitachi.kioskdesk.service.ProductService;
@@ -11,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,11 +38,13 @@ import java.util.stream.IntStream;
 public class AdminController {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductModelRepository productModelRepository;
 
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public String listProducts(
@@ -198,6 +201,65 @@ public class AdminController {
             return "addUser";
         }
     }
+
+    @RequestMapping("/addModel")
+    public String addModel(Model model) {
+        model.addAttribute("title", "Kiosk - Create Model");
+        model.addAttribute("productModel", new ProductModel());
+        return "addModel";
+    }
+
+    @PostMapping("/saveNewModel")
+    public String saveNewModel(@Valid @ModelAttribute("productModel") ProductModel productModel, BindingResult result,
+                              HttpSession session, Model model) {
+
+        try {
+            ProductModel savedModel = productModelRepository.findByModelName(productModel.getModelName());
+            if(savedModel != null){
+                log.error("Validation error while saving model {}", result);
+                model.addAttribute("productModel", productModel);
+                result.rejectValue("modelName", "error.modelName", "Model already present!");
+                return "addModel";
+            }
+            if (result.hasErrors()) {
+                log.error("Validation error while saving model {}", result);
+                model.addAttribute("productModel", productModel);
+                return "addUser";
+            }
+            productModelRepository.save(productModel);
+            session.setAttribute("message", new Message("Successfully Added Model", "alert-success"));
+            return "redirect:/admin/models";
+        } catch (Exception ex) {
+            log.error("Error while saving model", ex);
+            session.setAttribute("message", new Message("Something went wrong!! " + ex.getMessage(), "alert-danger"));
+            return "addModel";
+        }
+    }
+
+    @RequestMapping("models")
+    public String productModels(Model model) {
+        model.addAttribute("title", "Kiosk - Models List");
+        model.addAttribute("productModels", productModelRepository.findAll());
+        return "admin-models";
+    }
+
+    @RequestMapping(value = "/model/delete", method = RequestMethod.GET)
+    public String deleteModel(@Param(value = "id") Long id, HttpSession session) {
+        Optional<ProductModel> optionalProductModel = productModelRepository.findById(id);
+        try {
+            ProductModel productModel = optionalProductModel.get();
+            productModelRepository.delete(productModel);
+            session.setAttribute("message", new Message("Model deleted successfully with ID" + id, "alert-success"));
+            return "redirect:/admin/models";
+        } catch (NoSuchElementException ex) {
+            log.error("Model not found ", ex);
+            session.setAttribute("message", new Message("Model Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+
+
 
 
 }

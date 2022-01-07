@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8"/>
+
+</head>
+<body style="background-color: #f8f9fd">
+
+<section>
+    <div class="container mt-5">
+        <div class="alert" th:classappend="${session.message.type}" th:if="${session.message}">
+            <p id="form-message" th:text="${session.message.content}"></p>
+            <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+        </div>
+
+        <h2 class="display-4 text-center">Models List</h2>
+        <table class="table mt-5">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="m: ${productModels}">
+                <th scope="row" th:text="${m.id}"/>
+                <td th:text="${m.modelName}"/>
+
+                <td>
+                    <a class="badge badge-danger" th:href="@{|/admin/model/delete?id=${m.id}|}"><span>Delete</span></a>
+                </td>
+
+            </tr>
+
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+</section>
+
+
+</body>
+</html>

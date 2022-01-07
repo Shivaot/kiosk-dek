@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="utf-8"/>
+
+
+</head>
+<body style="background-color: #f8f9fd;">
+
+<section>
+    <div class="container form-box">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="my-card mt-3">
+
+                    <div class="alert" th:classappend="${session.message.type}" th:if="${session.message}">
+                        <p id="form-message" th:text="${session.message.content}"></p>
+                        <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+                    </div>
+
+                    <h1 class="text-center">Enter Details</h1>
+                    <br/><br/>
+
+                    <form action="" id="create-model" method="post" th:action="@{/admin/saveNewModel}" th:object="${productModel}">
+                        <div class="form-group">
+                            <label for="modelName">Model Name</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('modelName') ? 'is-invalid':''}"
+                                   id="modelName" name="modelName" th:value="${productModel.modelName}" type="text">
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('modelName')}" th:text="${e}"></div>
+                        </div>
+
+                        <button class="btn btn-primary">Submit</button>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+</body>
+</html>

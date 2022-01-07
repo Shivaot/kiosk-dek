@@ -45,12 +45,9 @@
                         </div>
                         <div class="form-group">
                             <label for="model">Model</label>
-                            <select class="form-control" id="model" th:field="*{model}">
-                                <option value="">Nothing selected</option>
-                                <option th:each="m : ${T(com.hitachi.kioskdesk.enums.ModelEnum).values()}"
-                                        th:text="${m.displayValue}"
-                                        th:value="${m}">Model1
-                                </option>
+                            <select class="form-control" th:field="*{model}" id="model" name="model" required>
+                                <option value="">Select Model</option>
+                                <option th:each="pm : ${productModels}" th:value="${pm.modelName}" th:text="${pm.modelName}"></option>
                             </select>
                         </div>
 
@@ -64,7 +61,7 @@
 
                         <div class="form-group">
                             <label for="rejectionOrScrap">Rejection/Scrap</label>
-                            <select class="form-control" id="rejectionOrScrap" th:field="*{rejectionOrScrap}">
+                            <select class="form-control" id="rejectionOrScrap" th:field="*{rejectionOrScrap}" required>
                                 <option value="">Nothing selected</option>
                                 <option th:each="rs : ${T(com.hitachi.kioskdesk.enums.RejectionScrap).values()}"
                                         th:text="${rs.displayValue}"

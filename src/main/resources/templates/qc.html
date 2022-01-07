@@ -45,13 +45,8 @@
                         </div>
                         <div class="form-group">
                             <label for="model">Model</label>
-                            <select class="form-control" id="model" readonly="" th:field="*{model}">
-                                <option value="">Nothing selected</option>
-                                <option th:each="m : ${T(com.hitachi.kioskdesk.enums.ModelEnum).values()}"
-                                        th:text="${m.displayValue}"
-                                        th:value="${m}">Model1
-                                </option>
-                            </select>
+                            <input class="form-control" id="model" name="model" placeholder="Enter here"
+                                   readonly th:value="${product.model}" type="text">
                         </div>
 
                         <div class="form-group">

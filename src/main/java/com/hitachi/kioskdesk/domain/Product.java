@@ -26,8 +26,7 @@ public class Product {
     @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for part number")
     private String partNumber;
     private Integer quantity;
-    @Enumerated(EnumType.STRING)
-    private ModelEnum model;
+    private String model;
     private Date date;
     @Column(columnDefinition = "TEXT")
     @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
@@ -35,7 +34,6 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
     private String qc1Comments;
-    @Column(columnDefinition = "TEXT")
     private Date dateCreated;
     private Date lastUpdated;
     @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for creator name")

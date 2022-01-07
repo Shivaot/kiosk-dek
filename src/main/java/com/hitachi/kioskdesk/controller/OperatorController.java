@@ -3,6 +3,7 @@ package com.hitachi.kioskdesk.controller;
 import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
+import com.hitachi.kioskdesk.repository.ProductModelRepository;
 import com.hitachi.kioskdesk.repository.ProductRepository;
 import com.hitachi.kioskdesk.service.StickerService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,12 +44,15 @@ public class OperatorController {
     @Autowired
     ProductRepository productRepository;
     @Autowired
+    ProductModelRepository productModelRepository;
+    @Autowired
     StickerService stickerService;
 
     @RequestMapping({"/new-item", "/"})
     public String newItem(Model model) {
         model.addAttribute("title", "Kiosk - New Product");
         model.addAttribute("product", new Product());
+        model.addAttribute("productModels", productModelRepository.findAll());
         return "new-item";
     }
 
