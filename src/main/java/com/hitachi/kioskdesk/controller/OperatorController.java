@@ -10,7 +10,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,11 +25,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -77,21 +80,16 @@ public class OperatorController {
     }
 
     @RequestMapping(value = "/product/print", method = RequestMethod.GET)
-    public void printWhiteSticker(@Param(value = "id") Long id, HttpServletResponse response) throws Exception {
+    public ResponseEntity<InputStreamResource> getTermsConditions(@Param(value = "id") Long id) throws Exception {
         Product product = productRepository.findById(id).get();
-
         byte[] stickerBytes = stickerService.getWhiteStickerBytes(product, getBaseUrl());
-
-        cropStickerFromPdfAndWrite(stickerBytes);
-
-        response.setContentType("application/octet-stream");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename = white_sticker.pdf";
-        response.setHeader(headerKey, headerValue);
-        ServletOutputStream outputStream = response.getOutputStream();
-        outputStream.write(stickerBytes);
-        outputStream.close();
-
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-disposition", "inline;filename=white_sticker");
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
     }
 
     private void cropStickerFromPdfAndWrite(byte[] stickerBytes) throws IOException {
