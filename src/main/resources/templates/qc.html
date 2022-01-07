@@ -80,28 +80,36 @@
 
                         <div class="form-group">
                             <label for="vendor">Vendor</label>
-                            <input class="form-control" id="vendor" name="vendor" placeholder="Enter here" required
+                            <input class="form-control" th:classappend="${#fields.hasErrors('vendor') ? 'is-invalid':''}"
+                                   id="vendor" name="vendor" placeholder="Enter here" required
                                    th:value="${product.vendor}" type="text">
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('vendor')}" th:text="${e}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="notificationNumber">Notification Number</label>
-                            <input class="form-control" id="notificationNumber" name="notificationNumber" placeholder="Enter here"
+                            <input class="form-control" th:classappend="${#fields.hasErrors('notificationNumber') ? 'is-invalid':''}"
+                                   id="notificationNumber" name="notificationNumber" placeholder="Enter here"
                                    required th:value="${product.notificationNumber}" type="text">
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('notificationNumber')}" th:text="${e}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="authorizedBy">Authorized By</label>
-                            <input class="form-control" id="authorizedBy" name="authorizedBy" placeholder="Enter here"
+                            <input class="form-control" th:classappend="${#fields.hasErrors('authorizedBy') ? 'is-invalid':''}"
+                                   id="authorizedBy" name="authorizedBy" placeholder="Enter here"
                                    required th:value="${product.authorizedBy}" type="text">
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('authorizedBy')}" th:text="${e}"></div>
                         </div>
 
 
                         <div class="form-group">
                             <label for="qc1Comments">Reason</label>
-                            <textarea class="form-control" id="qc1Comments" name="qc1Comments"
+                            <textarea class="form-control" th:classappend="${#fields.hasErrors('qc1Comments') ? 'is-invalid':''}"
+                                      id="qc1Comments" name="qc1Comments"
                                       placeholder="Enter reason" required rows="3"
                                       th:text="${product.qc1Comments}"></textarea>
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('qc1Comments')}" th:text="${e}"></div>
                         </div>
 
 

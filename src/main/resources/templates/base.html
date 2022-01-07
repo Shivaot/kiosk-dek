@@ -40,7 +40,9 @@
     $(document).ready(function () {
         $('li.active:not(#pag)').removeClass('active');
         $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-        if (window.location.href.indexOf("addProduct") === -1 && window.location.href.indexOf("updateProduct") === -1) {
+        if (window.location.href.indexOf("addProduct") === -1 &&
+            window.location.href.indexOf("updateProduct") === -1 &&
+            window.location.href.indexOf("saveNewUser") === -1) {
             setTimeout(function () {
                 $('.alert').alert('close');
             }, 3000);

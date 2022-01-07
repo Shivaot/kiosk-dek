@@ -174,6 +174,13 @@ public class AdminController {
                               HttpSession session, Model model) {
 
         try {
+            User savedUser = userRepository.findByEmail(user.getEmail().trim());
+            if(savedUser != null){
+                log.error("Validation error while saving user {}", result);
+                model.addAttribute("u", user);
+                result.rejectValue("email", "error.email", "Email already present!");
+                return "addUser";
+            }
             if (result.hasErrors()) {
                 log.error("Validation error while saving user {}", result);
                 model.addAttribute("u", user);

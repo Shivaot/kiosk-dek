@@ -28,8 +28,10 @@
                           th:object="${product}">
                         <div class="form-group">
                             <label for="partNumber">Part Number</label>
-                            <input class="form-control" id="partNumber" name="partNumber" placeholder="Enter here"
-                                   required th:value="${product.partNumber}" type="text">
+                            <input class="form-control" th:classappend="${#fields.hasErrors('partNumber') ? 'is-invalid':''}"
+                                   id="partNumber" name="partNumber" placeholder="Enter here"
+                                   required th:value="${product.partNumber}" type="text" />
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('partNumber')}" th:text="${e}"></div>
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
@@ -54,8 +56,10 @@
 
                         <div class="form-group">
                             <label for="creatorName">Creator Name</label>
-                            <input class="form-control" id="creatorName" name="creatorName" placeholder="Enter here"
+                            <input class="form-control" th:classappend="${#fields.hasErrors('creatorName') ? 'is-invalid':''}"
+                                   id="creatorName" name="creatorName" placeholder="Enter here"
                                    required th:value="${product.creatorName}" type="text">
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('creatorName')}" th:text="${e}"></div>
                         </div>
 
                         <div class="form-group">
@@ -71,9 +75,11 @@
 
                         <div class="form-group">
                             <label for="defectDescription">Defect Description</label>
-                            <textarea class="form-control" id="defectDescription" name="defectDescription"
+                            <textarea class="form-control" th:classappend="${#fields.hasErrors('defectDescription') ? 'is-invalid':''}"
+                                      id="defectDescription" name="defectDescription"
                                       placeholder="Enter here" required rows="3"
                                       th:text="${product.defectDescription}"></textarea>
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('defectDescription')}" th:text="${e}"></div>
                         </div>
 
                         <button class="btn btn-primary">Submit</button>

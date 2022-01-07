@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 
 /**
@@ -22,25 +23,32 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for part number")
     private String partNumber;
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private ModelEnum model;
     private Date date;
     @Column(columnDefinition = "TEXT")
+    @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
     private String defectDescription;
     @Column(columnDefinition = "TEXT")
+    @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
     private String qc1Comments;
     @Column(columnDefinition = "TEXT")
     private Date dateCreated;
     private Date lastUpdated;
+    @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for creator name")
     private String creatorName;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Enumerated(EnumType.STRING)
     private RejectionScrap rejectionOrScrap;
+    @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for vendor")
     private String vendor;
+    @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for notification")
     private String notificationNumber;
+    @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for authorizer name")
     private String authorizedBy;
 
     @PrePersist
