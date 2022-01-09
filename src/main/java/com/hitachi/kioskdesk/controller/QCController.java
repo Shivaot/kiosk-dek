@@ -97,4 +97,9 @@ public class QCController {
                 .body(resource);
     }
 
+    @RequestMapping(value = "/productRedirect", method = RequestMethod.GET)
+    public String productRedirect(@RequestParam String barcodeText) {
+        return "redirect:/qc/product/" + barcodeText;
+    }
+
 }

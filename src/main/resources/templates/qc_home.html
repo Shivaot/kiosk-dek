@@ -21,7 +21,16 @@
                         <th:block th:text="${#session.removeAttribute('message')}"></th:block>
                     </div>
 
-                    Scan Code
+                    <h3 class="text-muted">Product Scan Screen</h3>
+
+                    <form id="barcodeForm" action="" th:action="@{/qc/productRedirect}">
+                        <div class="form-group">
+                            <input type="text" th:value="${barcodeText}" id="barcodeText" name="barcodeText" class="form-control" placeholder="Scan">
+                            <small id="Help" class="form-text text-muted">If Unable to scan, enter number below barcode and press <strong>Submit</strong></small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+
 
 
                 </div>
