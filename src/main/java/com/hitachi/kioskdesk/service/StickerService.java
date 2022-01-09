@@ -50,7 +50,7 @@ public class StickerService {
     }
 
     byte[] generateWhiteSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
-        ClassPathResource res = new ClassPathResource("white_sticker.pdf");
+        ClassPathResource res = new ClassPathResource("white_sticker_new.pdf");
         File file = res.getFile();
         PdfReader reader = new PdfReader(Files.readAllBytes(Paths.get(file.getPath())));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -63,12 +63,13 @@ public class StickerService {
         form.setField("product_qty", product.getQuantity().toString());
         form.setField("product_problem_desc", product.getDefectDescription());
         form.setField("product_creator_name", product.getCreatorName());
+        form.setField("product_id", product.getId().toString());
         PdfContentByte content = stamper.getOverContent(reader.getNumberOfPages());
 
         com.itextpdf.text.Image image = Image.getInstance(barcodeBytes);
 
-        image.setAbsolutePosition(142, 570);
-        image.scaleAbsolute(140, 20);
+        image.setAbsolutePosition(142, 577);
+        image.scaleAbsolute(140, 13);
         content.addImage(image);
         stamper.setFormFlattening(true);
         stamper.close();
