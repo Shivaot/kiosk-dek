@@ -27,7 +27,7 @@ public class ProductService {
     public Page<Product> findPaginated(Pageable pageable, boolean qcList, boolean fetchCancelled) {
         List<Product> products = new ArrayList<>();
         if (qcList) {
-            products = productRepository.findAllByInNewStatus(Status.NEW);
+            products = productRepository.findAllByInNewStatus(Status.QC);
         } else if (fetchCancelled) {
             products = productRepository.findAllByInNewStatus(Status.CANCELLED);
         } else {

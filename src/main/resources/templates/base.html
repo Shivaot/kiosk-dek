@@ -22,6 +22,20 @@
             width: 200px
         }
 
+        .active a{
+            color: #ed691f !important;
+        }
+
+        .btn-primary,
+        .btn-primary:hover,
+        .btn-primary:active,
+        .btn-primary:visited,
+        .btn-primary:focus {
+            background-color: #ed691f;
+            border-color: #ed691f;
+        }
+
+
     </style>
 
     <title th:text="${title}">Base HTML</title>
@@ -42,13 +56,16 @@
         $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
         if (window.location.href.indexOf("addProduct") === -1 &&
             window.location.href.indexOf("updateProduct") === -1 &&
-            window.location.href.indexOf("saveNewUser") === -1) {
+            window.location.href.indexOf("saveNewUser") === -1 &&
+            window.location.href.indexOf("qc") === -1) {
             setTimeout(function () {
                 $('.alert').alert('close');
             }, 3000);
         }
 
-         document.getElementById("barcodeText").focus();
+        if ($('#barcodeText').length) {
+            document.getElementById("barcodeText").focus();
+        }
 
     });
 </script>

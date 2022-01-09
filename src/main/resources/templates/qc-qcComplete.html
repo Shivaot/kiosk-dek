@@ -20,13 +20,18 @@
                         <th:block th:text="${#session.removeAttribute('message')}"></th:block>
                     </div>
 
-                    <h3 class="text-center text-muted">Update Details</h3>
+                    <h3 class="text-center text-muted">Product Details</h3>
                     <br/>
                     <br/>
-                    <form action="" id="update-form" method="post" th:action="@{/qc/updateProduct}"
+                    <form action="" id="view-form" method="post"
                           th:object="${product}">
-                        <input id="id" th:field="*{id}" type="hidden">
-                        <input id="dateCreated" th:field="*{dateCreated}" type="hidden">
+
+                        <div class="alert alert-warning" th:if="${product.status == T(com.hitachi.kioskdesk.enums.Status).CANCELLED}">
+                            <p>This product has been marked as cancelled by QC</p>
+                        </div>
+                        <div class="alert alert-success" th:if="${product.status == T(com.hitachi.kioskdesk.enums.Status).COMPLETED}">
+                            <p>This product has been marked as completed by admin</p>
+                        </div>
 
                         <div class="form-group">
                             <label for="partNumber">Part Number</label>
@@ -57,13 +62,8 @@
 
                         <div class="form-group">
                             <label for="rejectionOrScrap">Rejection/Scrap</label>
-                            <select class="form-control" id="rejectionOrScrap" readonly th:field="*{rejectionOrScrap}">
-                                <option value="">Nothing selected</option>
-                                <option th:each="rs : ${T(com.hitachi.kioskdesk.enums.RejectionScrap).values()}"
-                                        th:text="${rs.displayValue}"
-                                        th:value="${rs}">Rejection
-                                </option>
-                            </select>
+                            <input class="form-control" id="rejectionOrScrap" name="rejectionOrScrap" placeholder="Enter here"
+                                   readonly th:value="${product.rejectionOrScrap.displayValue}" type="text">
                         </div>
 
                         <div class="form-group">
@@ -75,42 +75,35 @@
 
                         <div class="form-group">
                             <label for="vendor">Vendor</label>
-                            <input class="form-control" th:classappend="${#fields.hasErrors('vendor') ? 'is-invalid':''}"
-                                   id="vendor" name="vendor" placeholder="Enter here" required
-                                   th:value="${product.vendor}" type="text">
-                            <div class="invalid-feedback" th:each="e: ${#fields.errors('vendor')}" th:text="${e}"></div>
+                            <input class="form-control"
+                                   id="vendor" name="vendor" placeholder="Enter here"
+                                   th:value="${product.vendor}" type="text" readonly>
                         </div>
 
                         <div class="form-group">
                             <label for="notificationNumber">Notification Number</label>
-                            <input class="form-control" th:classappend="${#fields.hasErrors('notificationNumber') ? 'is-invalid':''}"
+                            <input class="form-control"
                                    id="notificationNumber" name="notificationNumber" placeholder="Enter here"
-                                   required th:value="${product.notificationNumber}" type="text">
-                            <div class="invalid-feedback" th:each="e: ${#fields.errors('notificationNumber')}" th:text="${e}"></div>
+                                   th:value="${product.notificationNumber}" type="text" readonly>
                         </div>
 
                         <div class="form-group">
                             <label for="authorizedBy">Authorized By</label>
-                            <input class="form-control" th:classappend="${#fields.hasErrors('authorizedBy') ? 'is-invalid':''}"
+                            <input class="form-control"
                                    id="authorizedBy" name="authorizedBy" placeholder="Enter here"
-                                   required th:value="${product.authorizedBy}" type="text">
-                            <div class="invalid-feedback" th:each="e: ${#fields.errors('authorizedBy')}" th:text="${e}"></div>
+                                   th:value="${product.authorizedBy}" type="text" readonly>
                         </div>
 
 
                         <div class="form-group">
                             <label for="qc1Comments">Reason</label>
-                            <textarea class="form-control" th:classappend="${#fields.hasErrors('qc1Comments') ? 'is-invalid':''}"
+                            <textarea class="form-control"
                                       id="qc1Comments" name="qc1Comments"
-                                      placeholder="Enter reason" required rows="3"
-                                      th:text="${product.qc1Comments}"></textarea>
-                            <div class="invalid-feedback" th:each="e: ${#fields.errors('qc1Comments')}" th:text="${e}"></div>
+                                      placeholder="Enter reason" rows="3"
+                                      th:text="${product.qc1Comments}" readonly></textarea>
                         </div>
 
 
-                        <button class="btn btn-primary">
-                            Submit
-                        </button>
 
                     </form>
 

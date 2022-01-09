@@ -51,14 +51,19 @@ public class QCController {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         try {
             Product product = optionalProduct.get();
-            if (product.getStatus() != Status.NEW) {
+            if (product.getStatus() == Status.NEW) {
+                model.addAttribute("title", "Kiosk - QC Product");
+                model.addAttribute("product", product);
+                return "qc";
+            } else if (product.getStatus() == Status.QC || product.getStatus() == Status.CANCELLED || product.getStatus() == Status.COMPLETED) {
+                model.addAttribute("title", "Kiosk - QC Product");
+                model.addAttribute("product", product);
+                return "qc-qcComplete";
+            } else {
                 log.debug("Error while opening product on QC end {}", product.getStatus());
                 session.setAttribute("message", new Message("Status Invalid for QC to view!! ", "alert-danger"));
                 return "error/403";
             }
-            model.addAttribute("title", "Kiosk - QC Product");
-            model.addAttribute("product", product);
-            return "qc";
         } catch (NoSuchElementException ex) {
             log.error("Product not found ", ex);
             session.setAttribute("message", new Message("Product Not Found with ID " + productId, "alert-danger"));
