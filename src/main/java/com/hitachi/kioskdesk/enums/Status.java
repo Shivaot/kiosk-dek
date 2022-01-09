@@ -5,9 +5,10 @@ package com.hitachi.kioskdesk.enums;
  */
 public enum Status {
 
-    NEW("New"),
-    QC("Qc"),
-    COMPLETED("Completed");
+    NEW("Production Done"),
+    QC("QC Done"),
+    COMPLETED("Completed"),
+    CANCELLED("Cancelled");
 
     private final String displayValue;
 

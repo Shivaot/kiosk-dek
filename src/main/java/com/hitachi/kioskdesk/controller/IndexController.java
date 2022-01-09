@@ -32,7 +32,7 @@ public class IndexController {
             } else if (isOperator) {
                 return "redirect:/operator/new-item";
             } else if (isQC) {
-                return "qc_home";
+                return "redirect:/qc/scan";
             }
         }
         return "redirect:/login";

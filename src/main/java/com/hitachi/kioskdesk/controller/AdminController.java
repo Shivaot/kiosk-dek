@@ -54,7 +54,7 @@ public class AdminController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), false, false);
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("products", productPage.getContent());

@@ -1,6 +1,7 @@
 package com.hitachi.kioskdesk.service;
 
 import com.hitachi.kioskdesk.domain.Product;
+import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,8 +24,15 @@ public class ProductService {
     ProductRepository productRepository;
 
 
-    public Page<Product> findPaginated(Pageable pageable) {
-        final List<Product> products = productRepository.findAll();
+    public Page<Product> findPaginated(Pageable pageable, boolean qcList, boolean fetchCancelled) {
+        List<Product> products = new ArrayList<>();
+        if (qcList) {
+            products = productRepository.findAllByInNewStatus(Status.NEW);
+        } else if (fetchCancelled) {
+            products = productRepository.findAllByInNewStatus(Status.CANCELLED);
+        } else {
+            products = productRepository.findAll();
+        }
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();

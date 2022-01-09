@@ -1,6 +1,8 @@
 package com.hitachi.kioskdesk.bootstrap;
 
+import com.hitachi.kioskdesk.domain.ProductModel;
 import com.hitachi.kioskdesk.domain.User;
+import com.hitachi.kioskdesk.repository.ProductModelRepository;
 import com.hitachi.kioskdesk.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -18,10 +20,25 @@ public class DataLoader implements ApplicationRunner {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ProductModelRepository productModelRepository;
 
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+
+        if (productModelRepository.count() < 3) {
+            ProductModel productModel1 = new ProductModel();
+            ProductModel productModel2 = new ProductModel();
+            ProductModel productModel3 = new ProductModel();
+            productModel1.setModelName("Model 1");
+            productModel2.setModelName("Model 2");
+            productModel3.setModelName("Model 3");
+            productModelRepository.save(productModel1);
+            productModelRepository.save(productModel2);
+            productModelRepository.save(productModel3);
+        }
 
         if (userRepository.count() < 3) {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

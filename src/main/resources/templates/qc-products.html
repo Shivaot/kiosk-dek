@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8"/>
+
+</head>
+<body style="background-color: #f8f9fd">
+
+<section>
+    <div style="padding-left: 30px;padding-right: 30px">
+        <div class="mt-5 alert" style="width: 50%;margin-left: 30vw" th:classappend="${session.message.type}"
+             th:if="${session.message}">
+            <p id="form-message" th:text="${session.message.content}"></p>
+            <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+        </div>
+
+
+        <table style="font-size: 14px" class="table table-responsive-lg table-bordered mt-5">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Part No</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Date</th>
+                <th scope="col">Model</th>
+                <th scope="col">Status</th>
+                <th scope="col">Problem Description</th>
+                <th scope="col">Creator Name</th>
+                <th scope="col">Rejection/Scrap</th>
+                <th scope="col">QC Comments</th>
+                <th scope="col">Vendor</th>
+                <th scope="col">Notification No.</th>
+                <th scope="col">Authorized By</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="p: ${products}">
+                <th scope="row" th:text="${p.id}"/>
+                <td th:text="${p.partNumber}"/>
+                <td th:text="${p.quantity}"/>
+                <td th:text="${p.date}"/>
+                <td th:text="${p.model}"/>
+                <td th:text="${p.status.displayValue}"/>
+                <td th:text="${p.defectDescription}"/>
+                <td th:text="${p.creatorName}"/>
+                <td th:text="${p.rejectionOrScrap}"/>
+                <td th:text="${p.qc1Comments}"/>
+                <td th:text="${p.vendor}"/>
+                <td th:text="${p.notificationNumber}"/>
+                <td th:text="${p.authorizedBy}"/>
+                <td>
+                    <a class="badge badge-danger"
+                       th:if="${p.status != T(com.hitachi.kioskdesk.enums.Status).CANCELLED}"
+                       th:href="@{|/qc/product/cancel?id=${p.id}|}" onclick="return confirm('Are you sure?')"><span>Mark Cancel</span></a>
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+
+
+        <nav aria-label="Page navigation example">
+            <ul th:if="${productPage.totalPages > 0}" class="pagination">
+                <li th:each="pageNumber : ${pageNumbers}" class="page-item" th:classappend="${pageNumber==productPage.number + 1} ? active" id="pag">
+                    <a class="page-link"
+                       th:href="@{/admin/products(size=${productPage.size}, page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                    >1</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+</section>
+
+
+</body>
+</html>

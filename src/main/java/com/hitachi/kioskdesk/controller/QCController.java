@@ -4,10 +4,13 @@ import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
 import com.hitachi.kioskdesk.repository.ProductRepository;
+import com.hitachi.kioskdesk.service.ProductService;
 import com.hitachi.kioskdesk.service.StickerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,8 +24,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.sql.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Shiva Created on 04/01/22
@@ -36,6 +42,9 @@ public class QCController {
     ProductRepository productRepository;
     @Autowired
     StickerService stickerService;
+    @Autowired
+    ProductService productService;
+
 
     @GetMapping("product/{id}")
     public String viewProduct(Model model, @PathVariable(value = "id") Long productId, HttpSession session) {
@@ -102,4 +111,92 @@ public class QCController {
         return "redirect:/qc/product/" + barcodeText;
     }
 
+
+    @RequestMapping(value = "/scan", method = RequestMethod.GET)
+    public String qcHome(Model model) {
+        model.addAttribute("title" ,"QC - Scan");
+        return "qc_home";
+    }
+
+    @RequestMapping(value = "/products", method = RequestMethod.GET)
+    public String listProducts(
+            Model model,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), true, false);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("title", "QC - products");
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "qc-products";
+    }
+
+
+    @RequestMapping(value = "/product/cancel", method = RequestMethod.GET)
+    public String cancelProduct(@Param(value = "id") Long id, HttpSession session) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        try {
+            Product product = optionalProduct.get();
+            product.setStatus(Status.CANCELLED);
+            productRepository.save(product);
+            session.setAttribute("message", new Message("Product Status Updated for " + id, "alert-success"));
+            return "redirect:/qc/products";
+        } catch (NoSuchElementException ex) {
+            log.error("Product not found ", ex);
+            session.setAttribute("message", new Message("Product Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
+
+    @RequestMapping(value = "/products/cancelled", method = RequestMethod.GET)
+    public String listCancelledProducts(
+            Model model,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), false, true);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("title", "QC - products cancelled");
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "qc-products-cancelled";
+    }
+
+    @RequestMapping(value = "/product/delete", method = RequestMethod.GET)
+    public String deleteProduct(@Param(value = "id") Long id, HttpSession session) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        try {
+            Product product = optionalProduct.get();
+            productRepository.delete(product);
+            session.setAttribute("message", new Message("Product deleted successfully with ID" + id, "alert-success"));
+            return "redirect:/qc/products/cancelled";
+        } catch (NoSuchElementException ex) {
+            log.error("Product not found ", ex);
+            session.setAttribute("message", new Message("Product Not Found with ID " + id, "alert-danger"));
+            return "error/404";
+        }
+    }
 }
