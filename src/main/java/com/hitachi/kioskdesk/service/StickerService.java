@@ -59,7 +59,7 @@ public class StickerService {
 
         form.setField("product_date", product.getDate().toString());
         form.setField("product_part_no", product.getPartNumber());
-        form.setField("paroduct_modal", product.getModel());
+        form.setField("product_model", product.getModel());
         form.setField("product_qty", product.getQuantity().toString());
         form.setField("product_problem_desc", product.getDefectDescription());
         form.setField("product_creator_name", product.getCreatorName());
@@ -68,7 +68,7 @@ public class StickerService {
 
         com.itextpdf.text.Image image = Image.getInstance(barcodeBytes);
 
-        image.setAbsolutePosition(142, 577);
+        image.setAbsolutePosition(143, 579);
         image.scaleAbsolute(140, 13);
         content.addImage(image);
         stamper.setFormFlattening(true);
