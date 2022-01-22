@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.barbecue.Barcode;
 import net.sourceforge.barbecue.BarcodeFactory;
 import net.sourceforge.barbecue.BarcodeImageHandler;
+import org.apache.pdfbox.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -51,8 +53,8 @@ public class StickerService {
 
     byte[] generateWhiteSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
         ClassPathResource res = new ClassPathResource("white_sticker_new.pdf");
-        File file = res.getFile();
-        PdfReader reader = new PdfReader(Files.readAllBytes(Paths.get(file.getPath())));
+        InputStream file = res.getInputStream();
+        PdfReader reader = new PdfReader(IOUtils.toByteArray(file));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PdfStamper stamper = new PdfStamper(reader, output);
         AcroFields form = stamper.getAcroFields();
@@ -86,8 +88,8 @@ public class StickerService {
 
     byte[] generateRedSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
         ClassPathResource res = new ClassPathResource("red_sticker_new.pdf");
-        File file = res.getFile();
-        PdfReader reader = new PdfReader(Files.readAllBytes(Paths.get(file.getPath())));
+        InputStream file = res.getInputStream();
+        PdfReader reader = new PdfReader(IOUtils.toByteArray(file));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PdfStamper stamper = new PdfStamper(reader, output);
         AcroFields form = stamper.getAcroFields();
