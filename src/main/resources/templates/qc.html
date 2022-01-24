@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label for="partNumber">Part Number</label>
                             <input class="form-control" id="partNumber" name="partNumber" placeholder="Enter here"
-                                   readonly th:value="${product.partNumber}" type="text">
+                                   th:value="${product.partNumber}" type="text">
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
@@ -56,21 +56,28 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="defectDescription">Defect Description</label>
+                            <textarea class="form-control" id="defectDescription" name="defectDescription"
+                                      placeholder="Enter here" readonly rows="3"
+                                      th:text="${product.defectDescription}"></textarea>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="date">QC Inspection Date</label>
+                            <input class="form-control" id="qcInspectionDate" name="qcInspectionDate" th:value="${product.qcInspectionDate}"
+                                   type="date" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="rejectionOrScrap">Rejection/Scrap</label>
-                            <select class="form-control" id="rejectionOrScrap" readonly th:field="*{rejectionOrScrap}">
+                            <select class="form-control" id="rejectionOrScrap" th:field="*{rejectionOrScrap}" required>
                                 <option value="">Nothing selected</option>
                                 <option th:each="rs : ${T(com.hitachi.kioskdesk.enums.RejectionScrap).values()}"
                                         th:text="${rs.displayValue}"
                                         th:value="${rs}">Rejection
                                 </option>
                             </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="defectDescription">Defect Description</label>
-                            <textarea class="form-control" id="defectDescription" name="defectDescription"
-                                      placeholder="Enter here" readonly rows="3"
-                                      th:text="${product.defectDescription}"></textarea>
                         </div>
 
                         <div class="form-group">

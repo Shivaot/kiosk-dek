@@ -53,6 +53,7 @@ public class QCController {
             Product product = optionalProduct.get();
             if (product.getStatus() == Status.NEW) {
                 model.addAttribute("title", "Kiosk - QC Product");
+                product.setQcInspectionDate(new Date(System.currentTimeMillis()));
                 model.addAttribute("product", product);
                 return "qc";
             } else if (product.getStatus() == Status.QC || product.getStatus() == Status.CANCELLED || product.getStatus() == Status.COMPLETED) {
@@ -129,7 +130,7 @@ public class QCController {
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int pageSize = size.orElse(20);
 
         Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), true, false);
 

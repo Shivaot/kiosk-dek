@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("from Product where status=:status")
+    @Query("from Product where status=:status order by dateCreated desc")
     List<Product> findAllByInNewStatus(@Param("status")Status status);
 
 }

@@ -31,6 +31,7 @@
         <th scope="col">Creator Name</th>
         <th scope="col">Rejection/Scrap</th>
         <th scope="col">QC Comments</th>
+        <th scope="col">Inspection Date</th>
         <th scope="col">Vendor</th>
         <th scope="col">Notification No.</th>
         <th scope="col">Authorized By</th>
@@ -40,7 +41,9 @@
       <tbody>
 
       <tr th:each="p: ${products}">
-        <th scope="row" th:text="${p.id}"/>
+        <th scope="row">
+          <a th:href="@{|/qc/product/${p.id}|}" th:text="${p.id}" target="_blank" />
+        </th>
         <td th:text="${p.partNumber}"/>
         <td th:text="${p.quantity}"/>
         <td th:text="${p.date}"/>
@@ -50,6 +53,7 @@
         <td th:text="${p.creatorName}"/>
         <td th:text="${p.rejectionOrScrap}"/>
         <td th:text="${p.qc1Comments}"/>
+        <td th:text="${p.qcInspectionDate}"/>
         <td th:text="${p.vendor}"/>
         <td th:text="${p.notificationNumber}"/>
         <td th:text="${p.authorizedBy}"/>

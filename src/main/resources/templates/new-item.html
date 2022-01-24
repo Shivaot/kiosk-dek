@@ -41,7 +41,7 @@
                         <div class="form-group">
                             <label for="date">Date</label>
                             <input class="form-control" id="date" name="date" required th:value="${product.date}"
-                                   type="date">
+                                   type="date" readonly>
                         </div>
                         <div class="form-group">
                             <label for="model">Model</label>
@@ -57,17 +57,6 @@
                                    id="creatorName" name="creatorName" placeholder="Enter here"
                                    required th:value="${product.creatorName}" type="text">
                             <div class="invalid-feedback" th:each="e: ${#fields.errors('creatorName')}" th:text="${e}"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="rejectionOrScrap">Rejection/Scrap</label>
-                            <select class="form-control" id="rejectionOrScrap" th:field="*{rejectionOrScrap}" required>
-                                <option value="">Nothing selected</option>
-                                <option th:each="rs : ${T(com.hitachi.kioskdesk.enums.RejectionScrap).values()}"
-                                        th:text="${rs.displayValue}"
-                                        th:value="${rs}">Rejection
-                                </option>
-                            </select>
                         </div>
 
                         <div class="form-group">

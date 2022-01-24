@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 
 /**
  * Shiva Created on 04/01/22
@@ -51,7 +52,9 @@ public class OperatorController {
     @RequestMapping({"/new-item", "/"})
     public String newItem(Model model) {
         model.addAttribute("title", "Kiosk - New Product");
-        model.addAttribute("product", new Product());
+        Product product = new Product();
+        product.setDate(new Date(System.currentTimeMillis()));
+        model.addAttribute("product", product);
         model.addAttribute("productModels", productModelRepository.findAll());
         return "new-item";
     }
@@ -65,6 +68,7 @@ public class OperatorController {
             if (result.hasErrors()) {
                 log.error("Validation error while saving product {}", result);
                 model.addAttribute("product", product);
+                model.addAttribute("productModels", productModelRepository.findAll());
                 return "new-item";
             }
             product.setStatus(Status.NEW);
@@ -76,6 +80,7 @@ public class OperatorController {
         } catch (Exception ex) {
             log.error("Error while saving product", ex);
             model.addAttribute("product", product);
+            model.addAttribute("productModels", productModelRepository.findAll());
             session.setAttribute("message", new Message("Something went wrong!! " + ex.getMessage(), "alert-danger"));
             return "new-item";
         }

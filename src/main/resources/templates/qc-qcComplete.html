@@ -74,6 +74,12 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="date">QC Inspection Date</label>
+                            <input class="form-control" id="qcInspectionDate" name="qcInspectionDate" th:value="${product.qcInspectionDate}"
+                                   type="date" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="vendor">Vendor</label>
                             <input class="form-control"
                                    id="vendor" name="vendor" placeholder="Enter here"

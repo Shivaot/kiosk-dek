@@ -48,6 +48,7 @@ public class Product {
     private String notificationNumber;
     @Size(min = 2, max = 20, message = "min 2 and max 20 characters are allowed for authorizer name")
     private String authorizedBy;
+    private Date qcInspectionDate;
 
     @PrePersist
     protected void onCreate() {
