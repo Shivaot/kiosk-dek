@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Date;
 
 /**
@@ -62,10 +63,11 @@ public class OperatorController {
 
     @PostMapping("/addProduct")
     public String addProduct(@Valid @ModelAttribute("product") Product product, BindingResult result,
-                             HttpSession session, Model model) {
+                             HttpSession session, Model model, Principal principal) {
 
         try {
             if (result.hasErrors()) {
+                log.info("Operator with ID {}", principal.getName());
                 log.error("Validation error while saving product {}", result);
                 model.addAttribute("product", product);
                 model.addAttribute("productModels", productModelRepository.findAll());
@@ -73,11 +75,13 @@ public class OperatorController {
             }
             product.setStatus(Status.NEW);
             Product savedProduct = productRepository.save(product);
+            log.info("Operator with ID {}", principal.getName());
             log.info("Product saved successfully with id {}", savedProduct.getId());
             model.addAttribute("product", product);
             model.addAttribute("isNewProduct", true);
             session.setAttribute("message", new Message("Successfully Added Product", "alert-success"));
         } catch (Exception ex) {
+            log.info("Operator with ID {}", principal.getName());
             log.error("Error while saving product", ex);
             model.addAttribute("product", product);
             model.addAttribute("productModels", productModelRepository.findAll());
@@ -89,12 +93,13 @@ public class OperatorController {
     }
 
     @RequestMapping(value = "/product/print", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getWhiteStickerFile(@Param(value = "id") Long id) throws Exception {
+    public ResponseEntity<InputStreamResource> getWhiteStickerFile(@Param(value = "id") Long id, Principal principal) throws Exception {
         Product product = productRepository.findById(id).get();
         byte[] stickerBytes = stickerService.getWhiteStickerBytes(product, getBaseUrl());
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "inline;filename=white_sticker.pdf");
+        headers.add("content-disposition", "inline;filename=white_sticker_" + id + ".pdf");
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
+        log.info("Operator Sticker with ID {}", principal.getName());
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentType(MediaType.parseMediaType("application/pdf"))

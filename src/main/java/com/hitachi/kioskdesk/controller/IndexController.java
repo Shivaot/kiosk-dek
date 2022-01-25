@@ -27,11 +27,15 @@ public class IndexController {
             boolean isAdmin = authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
             boolean isOperator = authorities.contains(new SimpleGrantedAuthority("ROLE_OPERATOR"));
             boolean isQC = authorities.contains(new SimpleGrantedAuthority("ROLE_QC"));
+            String nameOf = authentication.getName();
             if (isAdmin) {
+                log.info("ADMIN Login {}", nameOf);
                 return "redirect:/admin/products";
             } else if (isOperator) {
+                log.info("OPERATOR Login {}", nameOf);
                 return "redirect:/operator/new-item";
             } else if (isQC) {
+                log.info("QC Login {}", nameOf);
                 return "redirect:/qc/scan";
             }
         }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
+import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -47,25 +48,32 @@ public class QCController {
 
 
     @GetMapping("product/{id}")
-    public String viewProduct(Model model, @PathVariable(value = "id") Long productId, HttpSession session) {
+    public String viewProduct(Model model, @PathVariable(value = "id") Long productId, HttpSession session, Principal principal) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
+        String name = principal.getName();
         try {
             Product product = optionalProduct.get();
             if (product.getStatus() == Status.NEW) {
+                log.info("QC with ID {}", name);
+                log.info("QC viewing NEW product with id {}", productId);
                 model.addAttribute("title", "Kiosk - QC Product");
                 product.setQcInspectionDate(new Date(System.currentTimeMillis()));
                 model.addAttribute("product", product);
                 return "qc";
             } else if (product.getStatus() == Status.QC || product.getStatus() == Status.CANCELLED || product.getStatus() == Status.COMPLETED) {
+                log.info("QC with ID {}", name);
+                log.info("QC viewing QC/CANCELLED/COMPLETED product with id {}", productId);
                 model.addAttribute("title", "Kiosk - QC Product");
                 model.addAttribute("product", product);
                 return "qc-qcComplete";
             } else {
+                log.info("QC with ID {}", name);
                 log.debug("Error while opening product on QC end {}", product.getStatus());
                 session.setAttribute("message", new Message("Status Invalid for QC to view!! ", "alert-danger"));
                 return "error/403";
             }
         } catch (NoSuchElementException ex) {
+            log.info("QC with ID {}", name);
             log.error("Product not found ", ex);
             session.setAttribute("message", new Message("Product Not Found with ID " + productId, "alert-danger"));
             return "error/404";
@@ -74,10 +82,12 @@ public class QCController {
 
     @PostMapping("/updateProduct")
     public String updateProduct(@Valid @ModelAttribute("product") Product product, BindingResult result,
-                                HttpSession session, Model model) {
+                                HttpSession session, Model model, Principal principal) {
+        String name = principal.getName();
 
         try {
             if (result.hasErrors()) {
+                log.info("QC with ID {}", name);
                 log.error("Validation error while updating product {}", result);
                 model.addAttribute("product", product);
                 return "qc";
@@ -85,11 +95,13 @@ public class QCController {
             product.setStatus(Status.QC);
             product.setLastUpdated(new Date(System.currentTimeMillis()));
             Product savedProduct = productRepository.save(product);
+            log.info("QC with ID {}", name);
             log.info("Product updated successfully with id {}", savedProduct.getId());
             model.addAttribute("product", product);
             model.addAttribute("isNewProduct", false);
             session.setAttribute("message", new Message("Successfully Updated Product", "alert-success"));
         } catch (Exception ex) {
+            log.info("QC with ID {}", name);
             log.error("Error while saving product", ex);
             model.addAttribute("product", product);
             session.setAttribute("message", new Message("Something went wrong!! " + ex.getMessage(), "alert-danger"));
@@ -100,12 +112,13 @@ public class QCController {
     }
 
     @RequestMapping(value = "/product/print", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getRedStickerFile(@Param(value = "id") Long id) throws Exception {
+    public ResponseEntity<InputStreamResource> getRedStickerFile(@Param(value = "id") Long id, Principal principal) throws Exception {
         Product product = productRepository.findById(id).get();
         byte[] stickerBytes = stickerService.getRedStickerBytes(product);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "inline;filename=red_sticker.pdf");
+        headers.add("content-disposition", "inline;filename=red_sticker_" + id + ".pdf");
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
+        log.info("QC with ID {}", principal.getName());
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentType(MediaType.parseMediaType("application/pdf"))
@@ -113,7 +126,9 @@ public class QCController {
     }
 
     @RequestMapping(value = "/productRedirect", method = RequestMethod.GET)
-    public String productRedirect(@RequestParam String barcodeText) {
+    public String productRedirect(@RequestParam String barcodeText, Principal principal) {
+        log.info("QC with ID {}", principal.getName());
+        log.info("Redirecting after scanning barcodeText {}", barcodeText);
         return "redirect:/qc/product/" + barcodeText;
     }
 
@@ -151,15 +166,18 @@ public class QCController {
 
 
     @RequestMapping(value = "/product/cancel", method = RequestMethod.GET)
-    public String cancelProduct(@Param(value = "id") Long id, HttpSession session) {
+    public String cancelProduct(@Param(value = "id") Long id, HttpSession session, Principal principal) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         try {
             Product product = optionalProduct.get();
             product.setStatus(Status.CANCELLED);
             productRepository.save(product);
+            log.info("QC with ID {}", principal.getName());
+            log.info("QC cancelled product with id {}", id);
             session.setAttribute("message", new Message("Product Status Updated for " + id, "alert-success"));
             return "redirect:/qc/products";
         } catch (NoSuchElementException ex) {
+            log.info("QC with ID {}", principal.getName());
             log.error("Product not found ", ex);
             session.setAttribute("message", new Message("Product Not Found with ID " + id, "alert-danger"));
             return "error/404";
@@ -192,11 +210,13 @@ public class QCController {
     }
 
     @RequestMapping(value = "/product/delete", method = RequestMethod.GET)
-    public String deleteProduct(@Param(value = "id") Long id, HttpSession session) {
+    public String deleteProduct(@Param(value = "id") Long id, HttpSession session, Principal principal) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         try {
             Product product = optionalProduct.get();
             productRepository.delete(product);
+            log.info("QC with ID {}", principal.getName());
+            log.info("QC deleted product with ID {}", id);
             session.setAttribute("message", new Message("Product deleted successfully with ID" + id, "alert-success"));
             return "redirect:/qc/products/cancelled";
         } catch (NoSuchElementException ex) {

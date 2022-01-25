@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="10 seconds">
+
+    <contextName>logback</contextName>
+
+
+    <!-- Format Output:% Date Representation Date,% Thread Represents Thread Name,% - 5LEVEL: Level 5 Character Width% MSG: Log Message,% N is a Retail -->
+    <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+<!--    <! - Define the path to log storage, do not configure relative paths ->-->
+    <property name="FILE_PATH" value="/home/shiva/spring-log.%d{yyyy-MM-dd}.%i.log" />
+
+<!--    <! - Console Output Log ->-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+<!--        <! - Log Level Filter INFO ->-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+<!--            <! - Print the log in the log_pattern configured above ->-->
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+<!--    <! - Generate a log file every day to save a 30-day log file. Rollingfile used to divide the file ->-->
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <fileNamePattern>${FILE_PATH}</fileNamePattern>
+
+            <!-- keep 15 days' worth of history -->
+            <maxHistory>30</maxHistory>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+<!--                <! - The biggest size of the log file ->-->
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+<!--            <! - Beyond Delete Old Files ->-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- project default level -->
+    <logger name="net.sh.rgface.serive" level="ERROR" />
+
+<!--    <! - Log Output Level ->-->
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="rollingFile" />
+    </root>
+</configuration>
