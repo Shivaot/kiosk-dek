@@ -52,7 +52,7 @@ public class StickerService {
     }
 
     byte[] generateWhiteSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
-        ClassPathResource res = new ClassPathResource("white_sticker_new.pdf");
+        ClassPathResource res = new ClassPathResource("white_sticker.pdf");
         InputStream file = res.getInputStream();
         PdfReader reader = new PdfReader(IOUtils.toByteArray(file));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -70,8 +70,8 @@ public class StickerService {
 
         com.itextpdf.text.Image image = Image.getInstance(barcodeBytes);
 
-        image.setAbsolutePosition(143, 579);
-        image.scaleAbsolute(140, 13);
+        image.setAbsolutePosition(5, 647);
+        image.scaleAbsolute(130, 26);
         content.addImage(image);
         stamper.setFormFlattening(true);
         stamper.close();
@@ -87,7 +87,7 @@ public class StickerService {
     }
 
     byte[] generateRedSticker(byte[] barcodeBytes, Product product) throws DocumentException, IOException {
-        ClassPathResource res = new ClassPathResource("red_sticker_new.pdf");
+        ClassPathResource res = new ClassPathResource("red_sticker.pdf");
         InputStream file = res.getInputStream();
         PdfReader reader = new PdfReader(IOUtils.toByteArray(file));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -108,8 +108,8 @@ public class StickerService {
 
         com.itextpdf.text.Image image = Image.getInstance(barcodeBytes);
 
-        image.setAbsolutePosition(171, 520);
-        image.scaleAbsolute(140, 17);
+        image.setAbsolutePosition(5, 647);
+        image.scaleAbsolute(130, 27);
         content.addImage(image);
         stamper.setFormFlattening(true);
         stamper.close();

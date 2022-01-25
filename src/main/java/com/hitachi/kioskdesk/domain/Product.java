@@ -29,10 +29,10 @@ public class Product {
     private String model;
     private Date date;
     @Column(columnDefinition = "TEXT")
-    @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
+    @Size(min = 2, max = 400, message = "min 2 and max 400 characters are allowed")
     private String defectDescription;
     @Column(columnDefinition = "TEXT")
-    @Size(min = 2, max = 50, message = "min 2 and max 50 characters are allowed")
+    @Size(min = 2, max = 250, message = "min 2 and max 250 characters are allowed")
     private String qc1Comments;
     private Date dateCreated;
     private Date lastUpdated;
