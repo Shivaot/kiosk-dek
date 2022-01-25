@@ -68,6 +68,14 @@
         }
 
     });
+
+    window.onunload = function () {
+        $.ajax({
+            type: "GET",
+            url: "/customLogout",
+            success: function (data) {}
+        });
+    }
 </script>
 </body>
 </html>

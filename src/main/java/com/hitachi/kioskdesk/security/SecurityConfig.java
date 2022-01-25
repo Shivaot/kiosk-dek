@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/qc/**").hasRole("QC")
                 .antMatchers("/**").permitAll()
                 .and().formLogin().loginPage("/login").and().logout()
-                .deleteCookies("JSESSIONID").and().rememberMe().key("uniqueAndSecret")
                 .and().csrf().disable();
         super.configure(http);
     }

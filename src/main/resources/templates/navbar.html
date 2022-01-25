@@ -11,9 +11,9 @@
     </a>
 
 
-    <a class="navbar-brand" href="#" sec:authorize="hasRole('OPERATOR')"><strong class="text-muted">Welcome Operator</strong></a>
-    <a class="navbar-brand" href="#" sec:authorize="hasRole('ADMIN')"><strong class="text-muted">Welcome Admin</strong></a>
-    <a class="navbar-brand" href="#" sec:authorize="hasRole('QC')"><strong class="text-muted">Welcome QC</strong></a>
+    <a class="navbar-brand" href="#" sec:authorize="hasRole('OPERATOR')">Welcome <strong class="text-muted" th:text="${#authentication.getPrincipal().getUsername()}">Welcome Operator</strong></a>
+    <a class="navbar-brand" href="#" sec:authorize="hasRole('ADMIN')">Welcome <strong class="text-muted" th:text="${#authentication.getPrincipal().getUsername()}">Welcome Admin</strong></a>
+    <a class="navbar-brand" href="#" sec:authorize="hasRole('QC')">Welcome <strong class="text-muted" th:text="${#authentication.getPrincipal().getUsername()}">Welcome QC</strong></a>
     <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
             data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>

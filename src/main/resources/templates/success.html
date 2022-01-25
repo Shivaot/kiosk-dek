@@ -26,10 +26,10 @@
                          th:src="@{/images/green-check.png}" alt=""/>
 
                     <div class="text-center mt-5">
-                        <a class="btn btn-primary mr-auto ml-auto" target="_blank" th:href="@{|/operator/product/print?id=${product.id}|}"
+                        <a class="btn btn-primary mr-auto ml-auto" th:href="@{|/operator/product/print?id=${product.id}|}"
                            th:if="${isNewProduct}"><span>Print Sticker</span></a>
 
-                        <a class="btn btn-primary mr-auto ml-auto" target="_blank" th:href="@{|/qc/product/print?id=${product.id}|}"
+                        <a class="btn btn-primary mr-auto ml-auto" th:href="@{|/qc/product/print?id=${product.id}|}"
                            th:if="${!isNewProduct}"><span>Print Sticker</span></a>
 
                     </div>
