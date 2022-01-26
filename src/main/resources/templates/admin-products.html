@@ -57,9 +57,9 @@
                 <td th:text="${p.authorizedBy}"/>
                 <td>
                     <a class="badge badge-success" th:href="@{|/admin/product/complete?id=${p.id}|}"
-                       th:if="${p.status == T(com.hitachi.kioskdesk.enums.Status).QC}"><span>Complete</span></a>
+                       th:if="${p.status == T(com.hitachi.kioskdesk.enums.Status).QC}" onclick="return confirm('Are you sure?')"><span>Complete</span></a>
                     <a class="badge badge-danger"
-                       th:href="@{|/admin/product/delete?id=${p.id}|}"><span>Delete</span></a>
+                       th:href="@{|/admin/product/delete?id=${p.id}|}" onclick="return confirm('Are you sure?')"><span>Delete</span></a>
                 </td>
             </tr>
 

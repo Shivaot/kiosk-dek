@@ -66,6 +66,7 @@
                                       placeholder="Enter here" required rows="3"
                                       th:text="${product.defectDescription}"></textarea>
                             <div class="invalid-feedback" th:each="e: ${#fields.errors('defectDescription')}" th:text="${e}"></div>
+                            Words left <span class="text-muted" id="words-left">100</span>
                         </div>
 
                         <button class="btn btn-primary">Submit</button>

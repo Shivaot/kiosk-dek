@@ -116,7 +116,7 @@ public class QCController {
         Product product = productRepository.findById(id).get();
         byte[] stickerBytes = stickerService.getRedStickerBytes(product);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "inline;filename=red_sticker_" + id + ".pdf");
+        headers.add("content-disposition", "attachment;filename=red_sticker_" + id + ".pdf");
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
         log.info("QC with ID {}", principal.getName());
         return ResponseEntity.ok()

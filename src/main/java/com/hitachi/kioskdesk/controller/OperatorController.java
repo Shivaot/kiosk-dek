@@ -97,7 +97,7 @@ public class OperatorController {
         Product product = productRepository.findById(id).get();
         byte[] stickerBytes = stickerService.getWhiteStickerBytes(product, getBaseUrl());
         HttpHeaders headers = new HttpHeaders();
-        headers.add("content-disposition", "inline;filename=white_sticker_" + id + ".pdf");
+        headers.add("content-disposition", "attachment;filename=white_sticker_" + id + ".pdf");
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(stickerBytes));
         log.info("Operator Sticker with ID {}", principal.getName());
         return ResponseEntity.ok()

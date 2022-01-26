@@ -31,7 +31,7 @@
                 <td th:text="${m.modelName}"/>
 
                 <td>
-                    <a class="badge badge-danger" th:href="@{|/admin/model/delete?id=${m.id}|}"><span>Delete</span></a>
+                    <a class="badge badge-danger" th:href="@{|/admin/model/delete?id=${m.id}|}" onclick="return confirm('Are you sure?')"><span>Delete</span></a>
                 </td>
 
             </tr>

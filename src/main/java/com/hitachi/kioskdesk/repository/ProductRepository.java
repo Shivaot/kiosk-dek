@@ -16,4 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("from Product where status=:status order by dateCreated desc")
     List<Product> findAllByInNewStatus(@Param("status")Status status);
 
+    @Query(value = "select * from product order by date_created desc limit 50", nativeQuery = true)
+    List<Product> findLatest50();
+
 }

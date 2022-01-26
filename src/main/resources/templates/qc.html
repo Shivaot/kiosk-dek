@@ -112,6 +112,7 @@
                                       placeholder="Enter reason" required rows="3"
                                       th:text="${product.qc1Comments}"></textarea>
                             <div class="invalid-feedback" th:each="e: ${#fields.errors('qc1Comments')}" th:text="${e}"></div>
+                            Words left <span class="text-muted" id="words-left">90</span>
                         </div>
 
 

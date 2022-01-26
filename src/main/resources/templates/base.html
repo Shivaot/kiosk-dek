@@ -67,6 +67,24 @@
             document.getElementById("barcodeText").focus();
         }
 
+        $("#defectDescription").on('keydown', function(e) {
+            var words = (this.value).length;
+            if (words <= 99) {
+                $('#words-left').text(99-words)
+            }else{
+                if (e.which !== 8) e.preventDefault();
+            }
+        });
+
+        $("#qc1Comments").on('keydown', function(e) {
+            var words = (this.value).length;
+            if (words <= 89) {
+                $('#words-left').text(89-words)
+            }else{
+                if (e.which !== 8) e.preventDefault();
+            }
+        });
+
     });
 
     window.onunload = function () {
