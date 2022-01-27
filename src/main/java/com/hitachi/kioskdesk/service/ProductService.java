@@ -21,12 +21,14 @@ public class ProductService {
     ProductRepository productRepository;
 
 
-    public Page<Product> findPaginated(Pageable pageable, boolean qcList, boolean fetchCancelled) {
+    public Page<Product> findPaginated(Pageable pageable, Status status) {
         List<Product> products = new ArrayList<>();
-        if (qcList) {
+        if (status == Status.QC) {
             products = productRepository.findAllByInNewStatus(Status.QC);
-        } else if (fetchCancelled) {
+        } else if (status == Status.CANCELLED) {
             products = productRepository.findAllByInNewStatus(Status.CANCELLED);
+        } else if (status == Status.NEW) {
+            products = productRepository.findAllByInNewStatus(Status.NEW);
         } else {
             products = productRepository.findAll(Sort.by(Sort.Direction.DESC, "dateCreated"));
         }

@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Shiva Created on 26/01/22
@@ -25,7 +26,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableScheduling
-public class ProductCSVJob {
+public class ProductCreateCSVJob {
 
     @Autowired
     private ProductRepository productRepository;
@@ -34,11 +35,36 @@ public class ProductCSVJob {
 
     // 10:30 A.M Every day
     @Scheduled(cron = "0 30 10 * * ?")
-    public void scheduleTaskUsingCronExpression() throws IOException {
+    public void run() throws IOException {
         log.info("***************Products CSV job started*******************");
+        try {
+            deleteFilesOlderThan30Days();
+        } catch (Exception ex) {
+            log.error("Exception while deleting files older than 30 days", ex);
+        }
         writeProductsToCsv();
         log.info("***************Products CSV job Ended*******************");
 
+    }
+
+    private void deleteFilesOlderThan30Days() {
+        File folder = new File(Objects.requireNonNull(environment.getProperty("product.backup.path")));
+        long days = 30;
+        String fileExtension = ".csv";
+
+        if (folder.exists()) {
+            File[] listFiles = folder.listFiles();
+            long eligibleForDeletion = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000);
+            if (listFiles != null) {
+                for (File listFile: listFiles) {
+                    if (listFile.getName().endsWith(fileExtension) && listFile.lastModified() < eligibleForDeletion) {
+                        if (!listFile.delete()) {
+                            System.out.println("Sorry Unable to Delete Files..");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void writeProductsToCsv() throws IOException {

@@ -147,7 +147,7 @@ public class QCController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
 
-        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), true, false);
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), Status.QC);
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("products", productPage.getContent());
@@ -192,7 +192,7 @@ public class QCController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), false, true);
+        Page<Product> productPage = productService.findPaginated(PageRequest.of(currentPage - 1, pageSize), Status.CANCELLED);
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("products", productPage.getContent());

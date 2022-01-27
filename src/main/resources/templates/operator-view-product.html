@@ -26,13 +26,6 @@
                     <form action="" id="view-form" method="post"
                           th:object="${product}">
 
-                        <div class="alert alert-warning" th:if="${product.status == T(com.hitachi.kioskdesk.enums.Status).CANCELLED}">
-                            <p>This product has been marked as cancelled by QC</p>
-                        </div>
-                        <div class="alert alert-success" th:if="${product.status == T(com.hitachi.kioskdesk.enums.Status).COMPLETED}">
-                            <p>This product has been marked as completed by admin</p>
-                        </div>
-
                         <div class="form-group">
                             <label for="partNumber">Part Number</label>
                             <input class="form-control" id="partNumber" name="partNumber" placeholder="Enter here"
@@ -61,56 +54,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="rejectionOrScrap">Rejection/Scrap</label>
-                            <input class="form-control" id="rejectionOrScrap" name="rejectionOrScrap" placeholder="Enter here"
-                                   readonly th:value="${product.rejectionOrScrap.displayValue}" type="text">
-                        </div>
-
-                        <div class="form-group">
                             <label for="defectDescription">Defect Description</label>
                             <textarea class="form-control" id="defectDescription" name="defectDescription"
                                       placeholder="Enter here" readonly rows="3"
                                       th:text="${product.defectDescription}"></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label for="date">QC Inspection Date</label>
-                            <input class="form-control" id="qcInspectionDate" name="qcInspectionDate" th:value="${product.qcInspectionDate}"
-                                   type="date" readonly>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="vendor">Vendor</label>
-                            <input class="form-control"
-                                   id="vendor" name="vendor" placeholder="Enter here"
-                                   th:value="${product.vendor}" type="text" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="notificationNumber">Notification Number</label>
-                            <input class="form-control"
-                                   id="notificationNumber" name="notificationNumber" placeholder="Enter here"
-                                   th:value="${product.notificationNumber}" type="text" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="authorizedBy">Authorized By</label>
-                            <input class="form-control"
-                                   id="authorizedBy" name="authorizedBy" placeholder="Enter here"
-                                   th:value="${product.authorizedBy}" type="text" readonly>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="qc1Comments">Reason</label>
-                            <textarea class="form-control"
-                                      id="qc1Comments" name="qc1Comments"
-                                      placeholder="Enter reason" rows="3"
-                                      th:text="${product.qc1Comments}" readonly></textarea>
-                        </div>
-
-
-                        <a class="btn btn-primary mr-auto ml-auto" th:href="@{|/qc/product/print?id=${product.id}|}">
+                        <a class="btn btn-primary mr-auto ml-auto" th:href="@{|/operator/product/print?id=${product.id}|}">
                             <span>Print Sticker</span>
                         </a>
                     </form>
