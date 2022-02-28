@@ -3,6 +3,7 @@ package com.hitachi.kioskdesk.controller;
 import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
+import com.hitachi.kioskdesk.helper.Utils;
 import com.hitachi.kioskdesk.repository.ProductModelRepository;
 import com.hitachi.kioskdesk.repository.ProductRepository;
 import com.hitachi.kioskdesk.service.ProductService;
@@ -58,10 +59,11 @@ public class OperatorController {
     ProductService productService;
 
     @RequestMapping({"/new-item", "/"})
-    public String newItem(Model model) {
+    public String newItem(Model model, Principal principal) {
         model.addAttribute("title", "Kiosk - New Product");
         Product product = new Product();
         product.setDate(new Date(System.currentTimeMillis()));
+        product.setCreatorName(Utils.parseUsername(principal));
         model.addAttribute("product", product);
         model.addAttribute("productModels", productModelRepository.findAll());
         return "new-item";

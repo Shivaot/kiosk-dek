@@ -3,6 +3,7 @@ package com.hitachi.kioskdesk.controller;
 import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.enums.Status;
 import com.hitachi.kioskdesk.helper.Message;
+import com.hitachi.kioskdesk.helper.Utils;
 import com.hitachi.kioskdesk.repository.ProductRepository;
 import com.hitachi.kioskdesk.service.ProductService;
 import com.hitachi.kioskdesk.service.StickerService;
@@ -58,6 +59,7 @@ public class QCController {
                 log.info("QC viewing NEW product with id {}", productId);
                 model.addAttribute("title", "Kiosk - QC Product");
                 product.setQcInspectionDate(new Date(System.currentTimeMillis()));
+                product.setAuthorizedBy(Utils.parseUsername(principal));
                 model.addAttribute("product", product);
                 return "qc";
             } else if (product.getStatus() == Status.QC || product.getStatus() == Status.CANCELLED || product.getStatus() == Status.COMPLETED) {

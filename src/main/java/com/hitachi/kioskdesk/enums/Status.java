@@ -1,5 +1,8 @@
 package com.hitachi.kioskdesk.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Shiva Created on 04/01/22
  */
@@ -18,5 +21,17 @@ public enum Status {
 
     public String getDisplayValue() {
         return displayValue;
+    }
+
+    private static final Map<String, Status> BY_LABEL = new HashMap<>();
+
+    static {
+        for (Status e: values()) {
+            BY_LABEL.put(e.displayValue, e);
+        }
+    }
+
+    public static Status valueOfLabel(String label) {
+        return BY_LABEL.get(label);
     }
 }

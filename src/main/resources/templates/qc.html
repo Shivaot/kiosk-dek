@@ -34,6 +34,11 @@
                                    th:value="${product.partNumber}" type="text">
                         </div>
                         <div class="form-group">
+                            <label for="partNumber">Part Description</label>
+                            <input class="form-control" id="partDescription" name="partDescription" placeholder="Enter here"
+                                   th:value="${product.partDescription}" type="text" readonly>
+                        </div>
+                        <div class="form-group">
                             <label for="quantity">Quantity</label>
                             <input class="form-control" id="quantity" name="quantity" placeholder="Enter here"
                                    readonly th:value="${product.quantity}" type="number">

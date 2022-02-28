@@ -61,7 +61,7 @@ public class StickerService {
 
         form.setField("product_date", product.getDate().toString());
         form.setField("product_part_no", product.getPartNumber());
-        form.setField("product_model", product.getModel());
+        form.setField("product_model", product.getPartDescription());
         form.setField("product_qty", product.getQuantity().toString());
         form.setField("product_problem_desc", product.getDefectDescription());
         form.setField("product_creator_name", product.getCreatorName());
@@ -96,7 +96,7 @@ public class StickerService {
 
         form.setField("product_date", product.getDate().toString());
         form.setField("product_part_no", product.getPartNumber());
-        form.setField("product_model", product.getModel());
+        form.setField("product_model", product.getPartDescription());
         form.setField("product_qty", product.getQuantity().toString());
         form.setField("product_reason", product.getQc1Comments());
         form.setField("product_notification_no", product.getNotificationNumber());

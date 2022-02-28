@@ -28,6 +28,7 @@
         <th scope="col">Model</th>
         <th scope="col">Status</th>
         <th scope="col">Problem Description</th>
+        <th scope="col">Part Description</th>
         <th scope="col">Creator Name</th>
         <th scope="col">Rejection/Scrap</th>
         <th scope="col">QC Comments</th>
@@ -35,7 +36,6 @@
         <th scope="col">Vendor</th>
         <th scope="col">Notification No.</th>
         <th scope="col">Authorized By</th>
-        <th scope="col">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -50,6 +50,7 @@
         <td th:text="${p.model}"/>
         <td th:text="${p.status.displayValue}"/>
         <td th:text="${p.defectDescription}"/>
+        <td th:text="${p.partDescription}"/>
         <td th:text="${p.creatorName}"/>
         <td th:text="${p.rejectionOrScrap}"/>
         <td th:text="${p.qc1Comments}"/>
@@ -57,10 +58,7 @@
         <td th:text="${p.vendor}"/>
         <td th:text="${p.notificationNumber}"/>
         <td th:text="${p.authorizedBy}"/>
-        <td>
-          <a class="badge badge-danger"
-             th:href="@{|/qc/product/delete?id=${p.id}|}"><span>Delete</span></a>
-        </td>
+
       </tr>
 
 

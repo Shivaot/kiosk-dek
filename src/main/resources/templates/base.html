@@ -7,6 +7,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/font-awesome.4.7.0.css}"/>
+    <link rel="stylesheet" th:href="@{/css/datatables.min.css}"/>
 
     <style>
         .form-box {
@@ -48,10 +49,16 @@
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/datatables.min.js}"></script>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $('#admin-table-main').DataTable({
+            paging: false
+        });
+
         $('li.active:not(#pag)').removeClass('active');
         $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
         if (window.location.href.indexOf("addProduct") === -1 &&
@@ -83,6 +90,18 @@
             }else{
                 if (e.which !== 8) e.preventDefault();
             }
+        });
+
+        $('#downloadCSVButton').on('click', function () {
+            let status = $('#productStatus').find(":selected").text();
+            let rejectionScrap = $('#rejectionScrap').find(":selected").text();
+            let fromDate = $('#fromDate').val()
+            let toDate = $('#toDate').val()
+            var link = document.createElement('a');
+            link.setAttribute("target","_blank");
+            link.href = "/admin/downloadProductCSV?status="+status+"&rs="+rejectionScrap+"&fd="+fromDate+"&td="+toDate;
+            document.body.appendChild(link);
+            link.click();
         });
 
     });

@@ -1,5 +1,6 @@
 package com.hitachi.kioskdesk.controller;
 
+import com.hitachi.kioskdesk.commandObject.ProductCSVCommand;
 import com.hitachi.kioskdesk.domain.Product;
 import com.hitachi.kioskdesk.domain.ProductModel;
 import com.hitachi.kioskdesk.domain.User;
@@ -11,9 +12,13 @@ import com.hitachi.kioskdesk.repository.UserRepository;
 import com.hitachi.kioskdesk.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,7 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.security.Principal;
+import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,6 +66,7 @@ public class AdminController {
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("products", productPage.getContent());
+        model.addAttribute("productCSVCommand", new ProductCSVCommand());
 
         int totalPages = productPage.getTotalPages();
         if (totalPages > 0) {
@@ -283,6 +291,19 @@ public class AdminController {
         }
     }
 
+
+    @RequestMapping(value = "/downloadProductCSV", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downloadProductCSV(@RequestParam("status") String status, @RequestParam("rs") String rs,
+                                                                  @RequestParam("fd") Date fd, @RequestParam("td") Date td, Principal principal) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-disposition", "attachment;filename=products.csv");
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(productService.getProductCSV(status, rs, fd, td)));
+        log.info("ADMIN {} downloading CSV with size {} and status {}", principal.getName() ,0, status);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+    }
 
 
 

@@ -34,6 +34,13 @@
                             <div class="invalid-feedback" th:each="e: ${#fields.errors('partNumber')}" th:text="${e}"></div>
                         </div>
                         <div class="form-group">
+                            <label for="partNumber">Part Description</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('partDescription') ? 'is-invalid':''}"
+                                   id="partDescription" name="partDescription" placeholder="Enter here"
+                                   required th:value="${product.partDescription}" type="text" />
+                            <div class="invalid-feedback" th:each="e: ${#fields.errors('partDescription')}" th:text="${e}"></div>
+                        </div>
+                        <div class="form-group">
                             <label for="quantity">Quantity</label>
                             <input class="form-control" id="quantity" name="quantity" placeholder="Enter here"
                                    required th:value="${product.quantity}" type="number">

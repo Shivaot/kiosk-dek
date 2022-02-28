@@ -17,8 +17,39 @@
             <th:block th:text="${#session.removeAttribute('message')}"></th:block>
         </div>
 
+        <div class="form-row align-items-center">
+            <div class="col-auto my-1">
+                <label class="mr-sm-2 sr-only" for="productStatus">Status</label>
+                <select class="custom-select mr-sm-2" id="productStatus" required>
+                    <option value="All">All</option>
+                    <option th:each="s : ${T(com.hitachi.kioskdesk.enums.Status).values()}"
+                            th:text="${s.displayValue}"
+                            th:value="${s}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-auto my-1">
+                <label class="mr-sm-2 sr-only" for="rejectionScrap">Rejection/Scrap</label>
+                <select class="custom-select mr-sm-2" id="rejectionScrap" required>
+                    <option value="All">All</option>
+                    <option th:each="rs : ${T(com.hitachi.kioskdesk.enums.RejectionScrap).values()}"
+                            th:text="${rs.displayValue}"
+                            th:value="${rs}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-auto my-1">
+                <input type="date" name="fromDate" class="form-control mr-sm-2" id="fromDate" th:value="${productCSVCommand.fromDate}">
+            </div>
+            <div class="col-auto my-1">
+                <input type="date" name="toDate" class="form-control mr-sm-2" id="toDate" th:value="${productCSVCommand.toDate}">
+            </div>
+            <div class="col-auto my-1">
+                <button id="downloadCSVButton" type="submit" class="btn btn-primary">Download CSV</button>
+            </div>
+        </div>
 
-        <table style="font-size: 14px" class="table table-responsive-lg table-bordered mt-5">
+        <table style="font-size: 14px" class="table table-responsive-lg table-bordered mt-5" id="admin-table-main">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -28,6 +59,7 @@
                 <th scope="col">Model</th>
                 <th scope="col">Status</th>
                 <th scope="col">Problem Description</th>
+                <th scope="col">Part Description</th>
                 <th scope="col">Creator Name</th>
                 <th scope="col">Rejection/Scrap</th>
                 <th scope="col">QC Comments</th>
@@ -48,6 +80,7 @@
                 <td th:text="${p.model}"/>
                 <td th:text="${p.status.displayValue}"/>
                 <td th:text="${p.defectDescription}"/>
+                <td th:text="${p.partDescription}"/>
                 <td th:text="${p.creatorName}"/>
                 <td th:text="${p.rejectionOrScrap}"/>
                 <td th:text="${p.qc1Comments}"/>
