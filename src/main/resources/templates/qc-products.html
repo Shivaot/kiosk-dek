@@ -36,6 +36,7 @@
                 <th scope="col">Vendor</th>
                 <th scope="col">Notification No.</th>
                 <th scope="col">Authorized By</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -58,6 +59,11 @@
                 <td th:text="${p.vendor}"/>
                 <td th:text="${p.notificationNumber}"/>
                 <td th:text="${p.authorizedBy}"/>
+                <td>
+                    <a class="badge badge-danger"
+                       th:if="${p.status != T(com.hitachi.kioskdesk.enums.Status).CANCELLED}"
+                       th:href="@{|/qc/product/cancel?id=${p.id}|}" onclick="return confirm('Are you sure?')"><span>Cancel</span></a>
+                </td>
             </tr>
 
 
