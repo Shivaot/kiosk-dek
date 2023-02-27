@@ -103,6 +103,7 @@ public class StickerService {
         form.setField("product_vendor", product.getVendor());
         form.setField("product_authorized_by", product.getAuthorizedBy());
         form.setField("product_id", product.getId().toString());
+        form.setField("rejectionOrScrap", product.getRejectionOrScrap().getDisplayValue().toUpperCase());
 
         PdfContentByte content = stamper.getOverContent(reader.getNumberOfPages());
 
